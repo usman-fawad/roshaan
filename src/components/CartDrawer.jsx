@@ -213,7 +213,7 @@ export default function CartDrawer() {
               {isCheckingOut ? (
                 <>
                   <span className="cart-spinner" aria-hidden="true"></span>
-                  <span>REDIRECTING TO SHOPIFY CHECKOUT...</span>
+                  <span>Preparing checkout...</span>
                 </>
               ) : (
                 <>
