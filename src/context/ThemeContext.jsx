@@ -3,8 +3,6 @@ import { createContext, useContext, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const theme = 'light';
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', 'light');
     if (document.body) document.body.setAttribute('data-theme', 'light');

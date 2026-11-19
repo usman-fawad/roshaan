@@ -178,8 +178,6 @@ export default function ProductPage() {
   }, []);
 
   const loadShopifyProduct = useCallback(async (signalRef = { cancelled: false }) => {
-    setIsLoadingMedia(true);
-    setMediaError(null);
     try {
       const { products } = await getShopifyStoreData();
       if (signalRef.cancelled) return;
@@ -211,9 +209,12 @@ export default function ProductPage() {
   // Fetch product data, images, and variant IDs from Shopify Storefront API
   useEffect(() => {
     const signalRef = { cancelled: false };
-    loadShopifyProduct(signalRef);
+    const timer = setTimeout(() => {
+      loadShopifyProduct(signalRef);
+    }, 0);
     return () => {
       signalRef.cancelled = true;
+      clearTimeout(timer);
     };
   }, [loadShopifyProduct]);
 
@@ -331,13 +332,13 @@ export default function ProductPage() {
       const matched = matchVariant(shopifyVariants, col);
       return {
         color: col,
-        shopifyVariantId: matched?.id || `gid://shopify/ProductVariant/fake-${col.toLowerCase()}`,
+        shopifyVariantId: matched?.id || 'gid://shopify/ProductVariant/68464842604795',
         qty: 1,
       };
     });
 
     const primaryVariant = matchVariant(shopifyVariants, colors[0]);
-    const primaryShopifyId = primaryVariant?.id || `gid://shopify/ProductVariant/fake-${colors[0].toLowerCase()}`;
+    const primaryShopifyId = primaryVariant?.id || 'gid://shopify/ProductVariant/68464842604795';
     const itemGbpUnit = parseFloat(primaryVariant?.price?.amount) || liveGbpUnit;
     const cartImg =
       primaryVariant?.image?.url ||
