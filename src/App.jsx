@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
 import { CountdownProvider } from './context/CountdownContext';
@@ -13,9 +14,20 @@ import ContactPage     from './pages/ContactPage';
 import AboutPage       from './pages/AboutPage';
 import ShippingPolicyPage from './pages/ShippingPolicyPage';
 import PolicyPage      from './pages/PolicyPage';
+import { trackPixel } from './utils/pixel';
 import './index.css';
 
 function Layout() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    trackPixel('PageView', {
+      page_path: location.pathname,
+      page_title: document.title,
+    });
+  }, [location.pathname]);
+
   return (
     <>
       <AnnouncementBar />

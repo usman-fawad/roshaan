@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import { createShopifyCart } from '../services/shopify';
 import { useCountry } from './CountryContext';
 import { BASE_GBP_PRICE } from '../utils/currency';
+import { trackPixel } from '../utils/pixel';
 
 const CartContext = createContext(null);
 
@@ -99,6 +100,11 @@ export function CartProvider({ children }) {
       });
 
       console.log('[Shopify Checkout] Initiating cartCreate with lines:', lines, 'country:', selectedCountry?.code);
+
+      trackPixel('InitiateCheckout', {
+        num_items: lines.reduce((s, l) => s + (l.quantity || 1), 0),
+        currency: selectedCountry?.code || 'GBP',
+      });
 
       const cart = await createShopifyCart(lines, selectedCountry?.code || 'GBP');
 

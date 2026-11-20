@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { useCountry } from '../context/CountryContext';
 import { BASE_GBP_PRICE } from '../utils/currency';
+import { trackPixel } from '../utils/pixel';
 import {
   getShopifyStoreData,
   buildShopifyGallery,
@@ -195,6 +196,15 @@ export default function ProductPage() {
       setGallery(mediaList);
       setActiveImg((prev) => (mediaList.length > 0 ? Math.min(prev, mediaList.length - 1) : 0));
       console.log('[Shopify] Synced product images/media:', mediaList.length);
+
+      trackPixel('ViewContent', {
+        content_name: product.title || 'magnetic light',
+        content_category: 'LED Work Lights',
+        content_ids: ['68464842604795'],
+        content_type: 'product',
+        value: 28.0,
+        currency: 'GBP',
+      });
     } catch (err) {
       if (signalRef.cancelled) return;
       console.warn('[Shopify] Could not fetch live product data:', err.message);
@@ -363,6 +373,16 @@ export default function ProductPage() {
       },
       1
     );
+
+    trackPixel('AddToCart', {
+      content_name: 'The Grip Glow Magnetic Work Light',
+      content_ids: [primaryShopifyId],
+      content_type: 'product',
+      value: +(displayUnitPrice * b.qty * (1 - b.discountRate)).toFixed(2),
+      currency: selectedCountry?.code || 'GBP',
+      quantity: b.qty,
+    });
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   };
