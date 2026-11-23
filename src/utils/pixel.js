@@ -1,4 +1,4 @@
-export const PIXEL_ID = '1037956039318708';
+export const PIXEL_ID = '1171343402127798';
 
 /**
  * Safely track standard Meta Pixel events
